@@ -1,4 +1,4 @@
-#iChannel0 "file://Advection.glsl"
+#iChannel0 "file://VelocitySolver.glsl"
 
 const int ITERATION_COUNT = 20;
 const float DIFFUSION_RATE = 10.0;
@@ -14,22 +14,28 @@ float diffusion(vec2 fragCoord)
     float rightCell  = textureOffset(iChannel0, uv, ivec2(1, 0)).r;
 
     float rate = iTimeDelta * DIFFUSION_RATE; // * iResolution.x * iResolution.y;
-    float density = cell + rate * (upperCell + lowerCell + leftCell + rightCell - 4.0 * cell);
-
-    return density;
+    return cell + rate * (upperCell + lowerCell + leftCell + rightCell - 4.0 * cell);
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    vec4 color;
-    if (iMouse.z > 0.0 && abs(fragCoord.x - iMouse.x) < 5.0 && abs(fragCoord.y - iMouse.y) < 5.0)
-    {
-        color = vec4(1.0);
-    } else {
-        float density = clamp(diffusion(fragCoord), 0.0, 1.0);
-        color = vec4(vec3(density), 1.0);
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    vec4 cell = texture2D(iChannel0, uv);
+    vec2 velocity = cell.gb;
+
+    if (velocity == vec2(0.0)) {
+        velocity = vec2(0.5, 0.5);
     }
 
-    // Output to screen
-    fragColor = color;
+    if (iMouse.z > 0.0 && abs(fragCoord.x - iMouse.x) < 5.0 && abs(fragCoord.y - iMouse.y) < 5.0)
+    {
+        velocity = ((iMouse.xy - abs(iMouse.wz)) / iResolution.xy) * 5.0 + 0.5;
+        fragColor = vec4(1.0, velocity, cell.a);
+    } else if (fragCoord.x >= 100.0 && fragCoord.x <= 120.0 && fragCoord.y >= 100.0 && fragCoord.y <= 120.0) {
+        fragColor = vec4(1.0, 0.5, 0.5, cell.a);
+    } else {
+        float density = diffusion(fragCoord); // clamp(diffusion(fragCoord), 0.0, 1.0);
+        // float density = cell.r;
+        fragColor = vec4(density, velocity, cell.a);
+    }
 }
