@@ -25,6 +25,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec4 cell = texture2D(iChannel0, uv);
     vec2 velocity = cell.gb;
 
-    float density = advection(fragCoord, (velocity - 0.5) * 100.0);
+    float density = advection(fragCoord, velocity);
     fragColor = vec4(density, velocity, cell.a);
 }

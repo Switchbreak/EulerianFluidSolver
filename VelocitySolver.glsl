@@ -1,7 +1,7 @@
 #iChannel0 "file://Pressure.glsl"
 
 const float DIFFUSION_RATE = 10.0;
-const float GRAVITY = 10000.0;
+const float GRAVITY = 100.0;
 
 vec2 diffusion(vec2 fragCoord)
 {
@@ -59,10 +59,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec4 cell = texture2D(iChannel0, uv);
 
     // vec2 velocity = (cell.gb - 0.5) * 100.0;
-    vec2 velocity = (diffusion(fragCoord) - 0.5) * 100.0;
+    vec2 velocity = diffusion(fragCoord);
     velocity = project(fragCoord, velocity);
     velocity = advection(fragCoord, velocity);
     velocity.y = velocity.y - iTimeDelta * GRAVITY;
 
-    fragColor = vec4(cell.r, velocity / 100.0 + 0.5, cell.a);
+    fragColor = vec4(cell.r, velocity, cell.a);
 }

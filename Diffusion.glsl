@@ -13,7 +13,7 @@ float diffusion(vec2 fragCoord)
     float leftCell   = textureOffset(iChannel0, uv, ivec2(-1, 0)).r;
     float rightCell  = textureOffset(iChannel0, uv, ivec2(1, 0)).r;
 
-    float rate = iTimeDelta * DIFFUSION_RATE; // * iResolution.x * iResolution.y;
+    float rate = iTimeDelta * DIFFUSION_RATE;
     return cell + rate * (upperCell + lowerCell + leftCell + rightCell - 4.0 * cell);
 }
 
@@ -23,18 +23,14 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec4 cell = texture2D(iChannel0, uv);
     vec2 velocity = cell.gb;
 
-    if (velocity == vec2(0.0)) {
-        velocity = vec2(0.5, 0.5);
-    }
-
     if (iMouse.z > 0.0 && abs(fragCoord.x - iMouse.x) < 5.0 && abs(fragCoord.y - iMouse.y) < 5.0)
     {
-        velocity = ((iMouse.xy - abs(iMouse.wz)) / iResolution.xy) * 5.0 + 0.5;
+        velocity = ((iMouse.xy - abs(iMouse.wz)) / iResolution.xy) * 5.0;
         fragColor = vec4(1.0, velocity, cell.a);
     } else if (fragCoord.x >= 100.0 && fragCoord.x <= 120.0 && fragCoord.y >= 100.0 && fragCoord.y <= 120.0) {
-        fragColor = vec4(1.0, 0.5, 0.5, cell.a);
+        fragColor = vec4(1.0, 10.5, 0.5, cell.a);
     } else {
-        float density = diffusion(fragCoord); // clamp(diffusion(fragCoord), 0.0, 1.0);
+        float density = diffusion(fragCoord);
         // float density = cell.r;
         fragColor = vec4(density, velocity, cell.a);
     }
