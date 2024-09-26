@@ -1,6 +1,11 @@
 #iChannel0 "file://Divergence.glsl"
 #iChannel1 "file://Advection.glsl"
 
+// The correct way to do this is through an iterative process of Gauss-Seidel relaxation, as in PressureSolver.glsl
+// however ShaderToy does not allow running multiple passes so borrowing trirop's clever solution of running 20 passes
+// of Jacobi Method to solve the Poisson equation and then manually precalculating a 20x20 kernel from the results to
+// apply all passes to the image in a single convolution
+
 // Created by Robert Schuetze - trirop/2017
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 

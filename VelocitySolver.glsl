@@ -1,7 +1,7 @@
 #iChannel0 "file://Pressure.glsl"
 
 const float DIFFUSION_RATE = 10.0;
-const float GRAVITY = 100.0;
+const float GRAVITY = -100.0;
 
 vec2 diffusion(vec2 fragCoord)
 {

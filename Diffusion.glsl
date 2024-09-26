@@ -2,6 +2,8 @@
 
 const int ITERATION_COUNT = 20;
 const float DIFFUSION_RATE = 10.0;
+const float OBSTACLE_SIZE = 50.0;
+const float DISSIPATION = 0.0001;
 
 float diffusion(vec2 fragCoord)
 {
@@ -23,15 +25,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec4 cell = texture2D(iChannel0, uv);
     vec2 velocity = cell.gb;
 
-    if (iMouse.z > 0.0 && abs(fragCoord.x - iMouse.x) < 5.0 && abs(fragCoord.y - iMouse.y) < 5.0)
-    {
+    if (iMouse.z > 0.0
+            && fragCoord.x >= iMouse.x && fragCoord.x <= iMouse.x + OBSTACLE_SIZE
+            && fragCoord.y >= iMouse.y && fragCoord.y <= iMouse.y + OBSTACLE_SIZE) {
         velocity = ((iMouse.xy - abs(iMouse.wz)) / iResolution.xy) * 5.0;
         fragColor = vec4(1.0, velocity, cell.a);
-    } else if (fragCoord.x >= 100.0 && fragCoord.x <= 120.0 && fragCoord.y >= 100.0 && fragCoord.y <= 120.0) {
-        fragColor = vec4(1.0, 10.5, 0.5, cell.a);
     } else {
-        float density = diffusion(fragCoord);
-        // float density = cell.r;
+        float density = diffusion(fragCoord) - DISSIPATION;
         fragColor = vec4(density, velocity, cell.a);
     }
 }

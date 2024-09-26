@@ -2,13 +2,16 @@
 #iChannel1 "file://cf46k9svvl471.jpg"
 
 const float EPSILON = 0.00000001;
+const float OBSTACLE_SIZE = 50.0;
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
     vec2 uv = fragCoord.xy / iResolution.xy;
     vec4 color = texture2D(iChannel0, uv);
 
-    if (fragCoord.x >= 100.0 && fragCoord.x <= 120.0 && fragCoord.y >= 100.0 && fragCoord.y <= 120.0) {
+    if (iMouse.z > 0.0
+            && fragCoord.x >= iMouse.x && fragCoord.x <= iMouse.x + OBSTACLE_SIZE
+            && fragCoord.y >= iMouse.y && fragCoord.y <= iMouse.y + OBSTACLE_SIZE) {
         fragColor = vec4(0, 0, 1.0, 1.0);
     } else if (color.r < EPSILON)
     {
