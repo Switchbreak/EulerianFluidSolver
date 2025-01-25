@@ -2,7 +2,10 @@ extends Node3D
 
 @onready var player := $Player
 @onready var fog_volume := $FogVolume
+@onready var bullets := $"Bullets"
 @onready var behavior_buffer := PackedFloat32Array()
+@onready var explosion_image: Image = load("res://Circle-Small.exr")
+@onready var particle_scene: PackedScene = preload("res://particle_explosion.tscn")
 
 @export var cells_x: int = 256;
 @export var cells_y: int = 256;
@@ -21,7 +24,7 @@ var advection_pipeline: RID
 var projection_pipeline: RID
 
 var output_texture: Texture2D
-var prev_pos := Vector2i(-1, -1);
+var explosions: Array[Vector3] = []
 
 func init_compute_shader() -> void:
     rd = RenderingServer.get_rendering_device()
@@ -115,30 +118,67 @@ func dispatch_compute(pipeline: RID, uniform_set: RID, x_groups: int, y_groups: 
     rd.sync()
 
 
+func world_to_sim(pos:Vector3) -> Vector2:
+    return Vector2(pos.x * 256.0 / 80.0, pos.z * 256.0 / 60.0)
+
+
 func update_image(clear:bool = false) -> void:
     var image_bytes := rd.texture_get_data(imageR, 0)
     var image := Image.create_from_data(cells_x, cells_y, false, Image.FORMAT_RGBAH, image_bytes)
 
     if clear:
-        image.fill_rect(Rect2i(0, 0, cells_x, cells_y), Color(0.0, 0.0, 0.0, 0.0))
-        image.fill_rect(Rect2i(1, 1, cells_x - 2, cells_y - 1), Color(0.0, 0.0, 0.0, 1.0))
-        #image.fill_rect(Rect2i(1, 1, cells_x - 2, cells_y - 1), Color(1.0, 1.0, 1.0, 1.0))
+        init_image(image)
 
-    image.fill_rect(Rect2i(0, 0, 5, 5), Color(0, 0, 0, 0))
-    image.fill_rect(Rect2i(112, 107, 32, 43), Color(0, 0, 0, 0))
+    draw_pillar(image)
+    draw_entity(image, player, 20)
 
-    var pos := Vector2i(player.position.x * 256.0 / 80.0 + 118.0, player.position.z * 256.0 / 60.0 + 118.0)
-    var vel := Vector2(pos - prev_pos) if prev_pos.x > 0 else Vector2.ZERO
-    prev_pos = pos
+    var children := bullets.get_children()
+    for bullet in children:
+        draw_entity(image, bullet, 10)
 
-    vel = vel.normalized() * 100.0;
-
-    if pos.x > 0 && pos.x < 256 && pos.y > 0 && pos.y < 256:
-        #image.fill_rect(Rect2i(pos, Vector2i(20, 20)), Color(0, 0, 0, 0))
-        image.fill_rect(Rect2i(prev_pos, Vector2i(20, 20)), Color(vel.x, vel.y, 10.0, 1.0))
+    for explosion in explosions:
+        draw_explosion(image, explosion)
+    explosions.clear()
 
     image_bytes = image.get_data()
     rd.texture_update(imageR, 0, image_bytes);
+
+
+func init_image(image: Image) -> void:
+    image.fill_rect(Rect2i(0, 0, cells_x, cells_y), Color(0.0, 0.0, 0.0, 0.0))
+
+    var density_noise := FastNoiseLite.new()
+    var velocity_x_noise := FastNoiseLite.new()
+    var velocity_y_noise := FastNoiseLite.new()
+    density_noise.seed = randi()
+    velocity_x_noise.seed = randi()
+    velocity_y_noise.seed = randi()
+
+    for x: int in range(cells_x - 2):
+        for y: int in range(cells_y - 2):
+            image.set_pixel(x + 1, y + 1, Color(
+                velocity_x_noise.get_noise_2d(x, y) * 100.0 - 5.0,
+                velocity_y_noise.get_noise_2d(x, y) * 100.0 - 5.0,
+                density_noise.get_noise_2d(x, y) * 5.0 + 5.0, 1.0))
+
+
+func draw_pillar(image: Image) -> void:
+    image.fill_rect(Rect2i(112, 107, 32, 43), Color(0, 0, 0, 0))
+
+
+func draw_entity(image: Image, body: CharacterBody3D, size: int, velocity_scale: float = 100.0) -> void:
+    var pos := Vector2i(world_to_sim(body.position) + Vector2(118, 118))
+    var vel := world_to_sim(body.velocity)
+
+    vel = vel.normalized() * velocity_scale;
+
+    image.fill_rect(Rect2i(pos, Vector2i(size, size)), Color(vel.x, vel.y, 0.0, 1.0))
+
+
+func draw_explosion(image: Image, explosion: Vector3) -> void:
+    var pos := Vector2i(world_to_sim(explosion) + Vector2(98, 98))
+
+    image.blend_rect(explosion_image, Rect2i(0, 0, 40, 40), pos)
 
 
 func init_rd_texture() -> void:

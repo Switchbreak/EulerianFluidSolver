@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwgh0p3f5we5j"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_pr20r"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_taf2d"]
+radial_segments = 16
+rings = 1
+cap_top = false
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_brg06"]
+top_radius = 0.0
+height = 1.0
+radial_segments = 16
+rings = 1
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_aiu6f"]
+height = 3.0
+
+[node name="Bullet" type="CharacterBody3D"]
+collision_layer = 4
+script = ExtResource("1_pr20r")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, 0, 0)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("CylinderMesh_taf2d")
+skeleton = NodePath("../..")
+
+[node name="Point" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 2.62268e-07, 1.31134e-07, -1.5)
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("CylinderMesh_brg06")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.5)
+shape = SubResource("CylinderShape3D_aiu6f")
