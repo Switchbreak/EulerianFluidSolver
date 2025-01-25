@@ -1,0 +1,102 @@
+[gd_scene load_steps=15 format=3 uid="uid://ww2th7g4mmni"]
+
+[ext_resource type="Texture2D" uid="uid://beilxbvkkwygr" path="res://Bricks100_1K-JPG_Color.jpg" id="1_35kl8"]
+[ext_resource type="Texture2D" uid="uid://dswqcub1ridym" path="res://Bricks097_1K-JPG_Color.jpg" id="2_keyap"]
+[ext_resource type="Script" path="res://torch_light_2.gd" id="2_v848s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0lvo5"]
+albedo_texture = ExtResource("1_35kl8")
+uv1_scale = Vector3(8, 6, 8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_h84aw"]
+lightmap_size_hint = Vector2i(704, 706)
+flip_faces = true
+size = Vector3(80, 30, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1ubnp"]
+size = Vector3(80, 2, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pbukp"]
+size = Vector3(2, 30, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uisf1"]
+size = Vector3(2, 30, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_njcx5"]
+size = Vector3(80, 30, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ha2k6"]
+size = Vector3(80, 30, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8empb"]
+size = Vector3(10, 30, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f1luu"]
+albedo_texture = ExtResource("2_keyap")
+uv1_scale = Vector3(1, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6r70f"]
+size = Vector3(10, 30, 10)
+
+[sub_resource type="Environment" id="Environment_uq230"]
+ambient_light_energy = 0.15
+
+[node name="Fluid Fog Demo" type="Node3D"]
+
+[node name="Room" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Room"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 16, 0)
+material_override = SubResource("StandardMaterial3D_0lvo5")
+mesh = SubResource("BoxMesh_h84aw")
+
+[node name="Floor" type="CollisionShape3D" parent="Room"]
+shape = SubResource("BoxShape3D_1ubnp")
+
+[node name="WestWall" type="CollisionShape3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, 16, 0)
+shape = SubResource("BoxShape3D_pbukp")
+
+[node name="EastWall" type="CollisionShape3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 16, 0)
+shape = SubResource("BoxShape3D_uisf1")
+
+[node name="NorthWall" type="CollisionShape3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, -31)
+shape = SubResource("BoxShape3D_njcx5")
+
+[node name="SouthWall" type="CollisionShape3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 31)
+shape = SubResource("BoxShape3D_ha2k6")
+
+[node name="TorchLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 26, 0)
+visible = false
+light_energy = 11.626
+shadow_enabled = true
+omni_range = 75.0
+
+[node name="TorchLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 26, 0)
+light_color = Color(0.709804, 0.682353, 0.113725, 1)
+light_energy = 16.0
+shadow_enabled = true
+omni_range = 75.0
+script = ExtResource("2_v848s")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.999999, 3.91155e-08, 0.00155323, -0.000731818, 0.882061, 0.471134, -0.00137003, -0.471135, 0.88206, 0.0362238, 42.2457, 53.0707)
+
+[node name="Pillar" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)
+shape = SubResource("BoxShape3D_8empb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)
+material_override = SubResource("StandardMaterial3D_f1luu")
+mesh = SubResource("BoxMesh_6r70f")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_uq230")

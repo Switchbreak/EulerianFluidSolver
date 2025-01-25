@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgqr2t7ago72w"]
+
+[ext_resource type="Script" path="res://run_shader.gd" id="1_yku43"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_yku43")
+
+[node name="Projector" type="TextureRect" parent="."]
+offset_left = 196.0
+offset_top = 162.0
+offset_right = 452.0
+offset_bottom = 418.0

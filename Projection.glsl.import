@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bolyj0j3twy2b"
+path="res://.godot/imported/Projection.glsl-ec5eddaefda99f769348c6691ac0955a.res"
+
+[deps]
+
+source_file="res://Projection.glsl"
+dest_files=["res://.godot/imported/Projection.glsl-ec5eddaefda99f769348c6691ac0955a.res"]
+
+[params]
+

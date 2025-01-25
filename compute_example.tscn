@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgqr2t7ago72w"]
+
+[ext_resource type="Script" path="res://run_shader.gd" id="1_yku43"]
+[ext_resource type="Shader" path="res://display_shader.gdshader" id="2_2dnmu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d7t1x"]
+shader = ExtResource("2_2dnmu")
+shader_parameter/scale_factor = 10.0
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_yku43")
+overrelaxation = 1.5
+iterations = 20
+
+[node name="Projector" type="TextureRect" parent="."]
+offset_left = 32.0
+offset_top = 64.0
+offset_right = 544.0
+offset_bottom = 576.0
+
+[node name="Projector_DensityField" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_d7t1x")
+offset_left = 608.0
+offset_top = 64.0
+offset_right = 1120.0
+offset_bottom = 576.0
+
+[node name="DebugInfo" type="Label" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 39.0
