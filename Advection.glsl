@@ -37,7 +37,7 @@ vec4 advectDensity(ivec2 pos, vec4 cell) {
     vec2 velocity = (cell.xy + vec2(rightCell.x, lowerCell.y)) / 2.0;
     vec2 prev = pos - uDeltaTime * velocity;
 
-    return mix(avgTexelFetch(prev), vec4(0, 0, 0, 1), float(prev.x < 4 || prev.y < 4));
+    return mix(avgTexelFetch(prev), vec4(0, 0, cell.b, 1), float(prev.x < 4 || prev.y < 4));
 }
 
 void main() {
