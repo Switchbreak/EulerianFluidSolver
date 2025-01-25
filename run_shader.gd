@@ -3,11 +3,12 @@ extends Node2D
 @onready var projector: TextureRect = $Projector
 @onready var projector_d: TextureRect = $Projector_DensityField
 @onready var behavior_buffer := PackedFloat32Array()
+@onready var explosion_image: Image = load("res://Circle-Small.exr")
 
-@export var cells_x: int = 256;
-@export var cells_y: int = 256;
-@export var overrelaxation: float = 1.0;
-@export var iterations: int = 10;
+@export var cells_x: int = 256
+@export var cells_y: int = 256
+@export var overrelaxation: float = 1.0
+@export var iterations: int = 10
 
 var rd: RenderingDevice
 var advection_shader: RID
@@ -21,7 +22,7 @@ var advection_pipeline: RID
 var projection_pipeline: RID
 
 var output_texture: Texture2D
-var prev_pos := Vector2i(-1, -1);
+var prev_pos := Vector2i(-1, -1)
 
 func init_compute_shader() -> void:
     rd = RenderingServer.get_rendering_device()
@@ -120,8 +121,7 @@ func update_image(clear:bool = false) -> void:
     var image := Image.create_from_data(cells_x, cells_y, false, Image.FORMAT_RGBAH, image_bytes)
 
     if clear:
-        image.fill_rect(Rect2i(0, 0, cells_x, cells_y), Color(0.0, 0.0, 0.0, 0.0))
-        image.fill_rect(Rect2i(1, 1, cells_x - 2, cells_y - 2), Color(0.0, 0.0, 0.0, 1.0))
+        init_image(image)
 
     image.fill_rect(Rect2i(112, 107, 32, 43), Color(0, 0, 0, 0))
 
@@ -141,8 +141,33 @@ func update_image(clear:bool = false) -> void:
 
         prev_pos = pos
 
+    if Input.is_key_pressed(KEY_SPACE):
+        var pos := Vector2i(projector_d.get_local_mouse_position())
+        if pos.x > 0 && pos.x < projector_d.size.x && pos.y > 0 && pos.y < projector_d.size.y:
+            @warning_ignore("integer_division")
+            image.blend_rect(explosion_image, Rect2i(0, 0, 40, 40), Vector2i(pos.x / 2 - 20, pos.y / 2 - 20))
+
     image_bytes = image.get_data()
     rd.texture_update(imageR, 0, image_bytes);
+
+
+func init_image(image: Image) -> void:
+    image.fill_rect(Rect2i(0, 0, cells_x, cells_y), Color(0.0, 0.0, 0.0, 0.0))
+    #image.fill_rect(Rect2i(1, 1, cells_x - 2, cells_y - 2), Color(0.0, 0.0, 0.0, 1.0))
+
+    var density_noise := FastNoiseLite.new()
+    var velocity_x_noise := FastNoiseLite.new()
+    var velocity_y_noise := FastNoiseLite.new()
+    density_noise.seed = randi()
+    velocity_x_noise.seed = randi()
+    velocity_y_noise.seed = randi()
+
+    for x: int in range(cells_x - 2):
+        for y: int in range(cells_y - 2):
+            image.set_pixel(x + 1, y + 1, Color(
+                velocity_x_noise.get_noise_2d(x, y) * 100.0 - 5.0,
+                velocity_y_noise.get_noise_2d(x, y) * 100.0 - 5.0,
+                density_noise.get_noise_2d(x, y) * 5.0 + 5.0, 1.0))
 
 
 func display_image() -> void:
