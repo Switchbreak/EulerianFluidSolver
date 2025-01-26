@@ -4,6 +4,9 @@ const MAX_VALUE = 10000000
 
 @onready var noise := FastNoiseLite.new()
 
+@export var flicker_amount: float = 50.0
+@export var flicker_strength: float = 20.0
+
 var value: float
 
 func _ready() -> void:
@@ -12,9 +15,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-    value += 50 * delta
+    value += flicker_amount * delta
     if value > MAX_VALUE:
         value = 0.0
 
-    var alpha := (noise.get_noise_1d(value) + 1.0) * 20.0 + 0.5
-    self.light_energy = alpha
+    self.light_energy = (noise.get_noise_1d(value) + 1.0) * flicker_strength + 0.5

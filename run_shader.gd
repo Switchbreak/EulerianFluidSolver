@@ -1,3 +1,6 @@
+# Demo that directly shows the 2D output of the fluid sim compute shader, and
+# allows users to interact with the density and velocity fields with the mouse.
+
 extends Node2D
 
 @onready var projector: TextureRect = $Projector
@@ -34,7 +37,6 @@ func init_compute_shader() -> void:
     imageW = create_image(cells_x, cells_y)
 
     behavior_buffer.resize(4)
-    behavior_buffer[0] = 0.0
     behavior = create_buffer_uniform(behavior_buffer.to_byte_array())
 
     var imageR_uniform := create_uniform(imageR, 0, RenderingDevice.UNIFORM_TYPE_IMAGE)
@@ -153,7 +155,6 @@ func update_image(clear:bool = false) -> void:
 
 func init_image(image: Image) -> void:
     image.fill_rect(Rect2i(0, 0, cells_x, cells_y), Color(0.0, 0.0, 0.0, 0.0))
-    #image.fill_rect(Rect2i(1, 1, cells_x - 2, cells_y - 2), Color(0.0, 0.0, 0.0, 1.0))
 
     var density_noise := FastNoiseLite.new()
     var velocity_x_noise := FastNoiseLite.new()
@@ -182,7 +183,6 @@ func init_rd_texture() -> void:
     output_texture = Texture2DRD.new()
 
     output_texture.texture_rd_rid = imageW
-    #output_texture.texture_rd_rid = imageR
     projector.texture = output_texture
     projector_d.texture = output_texture
 

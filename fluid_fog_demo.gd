@@ -1,3 +1,8 @@
+# This demo runs the fluid sim compute shader every frame, and then passes the
+# density field texture in to a FogVolume, where a FogShader creates a 3D volume
+# from the 2D field. Moving entities interact with the fluid sim by drawing on the
+# texture containing the velocity and density field.
+
 extends Node3D
 
 @onready var player := $Player
@@ -36,7 +41,6 @@ func init_compute_shader() -> void:
     imageW = create_image(cells_x, cells_y)
 
     behavior_buffer.resize(4)
-    behavior_buffer[0] = 0.0
     behavior = create_buffer_uniform(behavior_buffer.to_byte_array())
 
     var imageR_uniform := create_uniform(imageR, 0, RenderingDevice.UNIFORM_TYPE_IMAGE)
@@ -119,7 +123,7 @@ func dispatch_compute(pipeline: RID, uniform_set: RID, x_groups: int, y_groups: 
 
 
 func world_to_sim(pos:Vector3) -> Vector2:
-    return Vector2(pos.x * 256.0 / 80.0, pos.z * 256.0 / 60.0)
+    return Vector2(pos.x * cells_x / 80.0, pos.z * cells_y / 60.0)
 
 
 func update_image(clear:bool = false) -> void:
@@ -167,7 +171,7 @@ func draw_pillar(image: Image) -> void:
 
 
 func draw_entity(image: Image, body: CharacterBody3D, size: int, velocity_scale: float = 100.0) -> void:
-    var pos := Vector2i(world_to_sim(body.position) + Vector2(118, 118))
+    var pos := Vector2i(world_to_sim(body.position) + Vector2((cells_x - 2) / 2 - (size / 2), (cells_y - 2) / 2 - (size / 2)))
     var vel := world_to_sim(body.velocity)
 
     vel = vel.normalized() * velocity_scale;
@@ -176,7 +180,7 @@ func draw_entity(image: Image, body: CharacterBody3D, size: int, velocity_scale:
 
 
 func draw_explosion(image: Image, explosion: Vector3) -> void:
-    var pos := Vector2i(world_to_sim(explosion) + Vector2(98, 98))
+    var pos := Vector2i(world_to_sim(explosion) + Vector2((cells_x - 2) / 2 - 20, (cells_y - 2) / 2 - 20))
 
     image.blend_rect(explosion_image, Rect2i(0, 0, 40, 40), pos)
 
@@ -202,7 +206,6 @@ func init_compute_resources() -> void:
 func process_compute(delta: float) -> void:
     behavior_buffer[0] = delta
     behavior_buffer[1] = overrelaxation
-    behavior_buffer[2] = 0
     update_uniform_values(behavior, behavior_buffer.to_byte_array())
 
     dispatch_compute(advection_pipeline, advection_uniform_set, 127, 127, 1)
