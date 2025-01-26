@@ -13,21 +13,12 @@ layout (binding = 2) uniform Behavior {
 void project(ivec2 pos)
 {
     vec4 cell       = imageLoad(uVelocityFieldR, pos);
-
-    /*if (cell.a == 0.0) {
-        return;
-    }*/
-    
     vec4 upperCell  = imageLoad(uVelocityFieldR, pos + ivec2(0, 1));
     vec4 lowerCell  = imageLoad(uVelocityFieldR, pos + ivec2(0, -1));
     vec4 leftCell   = imageLoad(uVelocityFieldR, pos + ivec2(-1, 0));
     vec4 rightCell  = imageLoad(uVelocityFieldR, pos + ivec2(1, 0));
     
     float adjacentCells = leftCell.a + rightCell.a + upperCell.a + lowerCell.a;
-    /*if (adjacentCells == 0.0) {
-        return;
-    }*/
-    
     float divergence = mix(uOverrelaxation * (rightCell.x - cell.x + upperCell.y - cell.y) / adjacentCells, 0.0, (cell.a == 0 || adjacentCells == 0.0));
     
     imageStore(uVelocityFieldR, pos,               vec4(cell.x + leftCell.a * divergence, cell.y + lowerCell.a * divergence, cell.zw));

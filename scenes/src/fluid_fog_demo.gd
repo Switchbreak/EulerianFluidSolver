@@ -171,6 +171,7 @@ func draw_pillar(image: Image) -> void:
 
 
 func draw_entity(image: Image, body: CharacterBody3D, size: int, velocity_scale: float = 100.0) -> void:
+    @warning_ignore("integer_division")
     var pos := Vector2i(world_to_sim(body.position) + Vector2((cells_x - 2) / 2 - (size / 2), (cells_y - 2) / 2 - (size / 2)))
     var vel := world_to_sim(body.velocity)
 
@@ -180,6 +181,7 @@ func draw_entity(image: Image, body: CharacterBody3D, size: int, velocity_scale:
 
 
 func draw_explosion(image: Image, explosion: Vector3) -> void:
+    @warning_ignore("integer_division")
     var pos := Vector2i(world_to_sim(explosion) + Vector2((cells_x - 2) / 2 - 20, (cells_y - 2) / 2 - 20))
 
     image.blend_rect(explosion_image, Rect2i(0, 0, 40, 40), pos)
