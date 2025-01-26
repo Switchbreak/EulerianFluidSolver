@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0egh8lmto324"
-path.s3tc="res://.godot/imported/Bricks097_1K-JPG_NormalGL.jpg-5c852d5cd7e49c91611d011451c10099.s3tc.ctex"
+uid="uid://b35d86jdmp1at"
+path.s3tc="res://.godot/imported/Bricks100_1K-JPG_Roughness.jpg-a49d2af7bd15c13aba870061e44a44d8.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Bricks097_1K-JPG_NormalGL.jpg"
-dest_files=["res://.godot/imported/Bricks097_1K-JPG_NormalGL.jpg-5c852d5cd7e49c91611d011451c10099.s3tc.ctex"]
+source_file="res://assets/Bricks100_1K-JPG_Roughness.jpg"
+dest_files=["res://.godot/imported/Bricks100_1K-JPG_Roughness.jpg-a49d2af7bd15c13aba870061e44a44d8.s3tc.ctex"]
 
 [params]
 
@@ -20,12 +20,12 @@ compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=1
-roughness/src_normal="res://Bricks097_1K-JPG_NormalGL.jpg"
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

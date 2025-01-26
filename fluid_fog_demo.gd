@@ -4,7 +4,7 @@ extends Node3D
 @onready var fog_volume := $FogVolume
 @onready var bullets := $"Bullets"
 @onready var behavior_buffer := PackedFloat32Array()
-@onready var explosion_image: Image = load("res://Circle-Small.exr")
+@onready var explosion_image: Image = load("res://assets/Circle-Small.exr")
 @onready var particle_scene: PackedScene = preload("res://particle_explosion.tscn")
 
 @export var cells_x: int = 256;
@@ -29,8 +29,8 @@ var explosions: Array[Vector3] = []
 func init_compute_shader() -> void:
     rd = RenderingServer.get_rendering_device()
 
-    advection_shader = load_shader(rd, "res://Advection.glsl")
-    projection_shader = load_shader(rd, "res://Projection.glsl")
+    advection_shader = load_shader(rd, "res://shaders/Advection.glsl")
+    projection_shader = load_shader(rd, "res://shaders/Projection.glsl")
 
     imageR = create_image(cells_x, cells_y)
     imageW = create_image(cells_x, cells_y)
