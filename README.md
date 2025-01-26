@@ -2,7 +2,7 @@
 
 Cool, swirly, interactive fluid motion for games through a real-time Eulerian fluid simulation running on the GPU.
 
-![Image of density field](images/DensityField.gif) ![Image of interaction with velocity field](images/Interaction.gif) ![Image of density field driving a FogVolume in 3D](images/FogDemo.gif)
+<img src="images/DensityField.gif" height="256" width="256" alt="Image of density field" /> <img src="images/Interaction.gif" height="256" width="256" alt="Image of interaction with velocity field" /> <img src="images/FogDemo.gif" height="256" width="256" alt="Image of density field driving a FogVolume in 3D" />
 
 The shader computes a 2D vector field for fluid velocity, as well as a 2D scalar field for density. These are stored in a texture with 16-bit half-width float channels, with the velocity field on the red and green channels and the density field on the blue channel, and the alpha channel used to flag fluid obstructions for the simulation. As demonstrated in the game code, this texture can be displayed in any number of different ways - here it serves as the input for a FogShader that controls a FogVolume. Game code can interact with the simulation by drawing the movement of entities onto the texture, either emitting or erasing fluid density as they move around.
 
