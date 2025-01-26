@@ -10,7 +10,7 @@ extends Node3D
 @onready var bullets := $"Bullets"
 @onready var behavior_buffer := PackedFloat32Array()
 @onready var explosion_image: Image = load("res://assets/Circle-Small.exr")
-@onready var particle_scene: PackedScene = preload("res://particle_explosion.tscn")
+@onready var particle_scene: PackedScene = preload("res://scenes/particle_explosion.tscn")
 
 @export var cells_x: int = 256;
 @export var cells_y: int = 256;

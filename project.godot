@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Eulerian Fluid Compute"
-run/main_scene="res://fluid_fog_demo.tscn"
+run/main_scene="res://scenes/fluid_fog_demo.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://assets/icon.svg"
 
 [editor]
 

@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 @onready var parent_scene = $"../.."
 @onready var player = $"../../Player"
-@onready var particle_scene: PackedScene = load("res://particle_explosion.tscn")
+@onready var particle_scene: PackedScene = load("res://scenes/particle_explosion.tscn")
 
 @export var speed: float = 100.0
 @export var explosion_camera_shake: float = 2.0

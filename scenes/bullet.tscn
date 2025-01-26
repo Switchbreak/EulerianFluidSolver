@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://dwgh0p3f5we5j"]
 
-[ext_resource type="Script" path="res://bullet.gd" id="1_pr20r"]
+[ext_resource type="Script" path="res://scenes/src/bullet.gd" id="1_pr20r"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_taf2d"]
 radial_segments = 16

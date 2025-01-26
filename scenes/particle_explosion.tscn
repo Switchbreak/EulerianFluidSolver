@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3doihlde3tfj"]
 
-[ext_resource type="Script" path="res://particle_explosion.gd" id="1_l5ye3"]
+[ext_resource type="Script" path="res://scenes/src/particle_explosion.gd" id="1_l5ye3"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3rvsp"]
 inherit_velocity_ratio = 1.345
